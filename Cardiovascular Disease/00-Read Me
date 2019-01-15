@@ -1,1 +1,3 @@
 This project intends to take data from many people about some habits like smoking, as well as heart rate and other general heart condition facts, and whether they have CVD or not. The goal is to take a test data set and predict who will have CVD or not
+
+Data was sent to use from the Framingham Heart Study based out of Boston University
