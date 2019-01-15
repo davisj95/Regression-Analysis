@@ -1,0 +1,71 @@
+---
+title: "Energy Consumption"
+output: html_document
+---
+
+
+US residential energy consumption
+```{r}
+setwd("~/STAT 330 - Intro to Regression/Class Exercises")
+my.data <- read.csv("Energy Numbers.csv", header=TRUE, sep=",")
+```
+
+Subset to TERCBUS Total Energy Consumed by the Residential Sector
+```{r}
+my.data.2 <- subset(my.data, MSN=="TERCBUS")
+```
+
+Subset to 1995-2017
+```{r}
+my.data.3 <- subset(my.data.2, my.data.2$YYYYMM>199100)
+```
+
+Remove yearly total (coded "month 13", every 13th obs)
+```{r}
+my.data.4 <- subset(my.data.3, my.data.3$YYYYMM%%100 != 13)
+```
+
+```{r}
+energy <- my.data.4$Value
+T <- length(energy)
+```
+
+
+Plot the time series for US residential energy consumption (in trillion Btu). Does it appear there is a monthly patter? If so, explain the possible business.economic 'cause' for this effect.
+```{r}
+energy <- as.numeric(energy)
+plot(1:T, energy, type="b", ylab="Energy Consumption (in trillion Btu)")
+```
+
+There seems to be a spike in energy consumption at the end of the year and beginning of next year - probably due to people having christmas lights on during the holiday season. The consumption spikes dramatically during november and december, and then drops back down to normal levels for the rest of the year
+
+Analysis
+```{r}
+library(astsa)
+
+#Estimate the ARIMA(1,1,1)x(1,1,1)_12
+energy.out <- sarima(energy,1,1,1,1,1,1,12)
+
+#Table of estimates
+energy.out$table
+
+#Predictions for next two years (24 months) (2018-2019)
+energy.future <- sarima.for(energy, n.ahead=24,1,1,1,1,1,1,12)
+
+L <-energy.future$pred - 1.96 * energy.future$se
+U <-energy.future$pred + 1.96 * energy.future$se
+
+#Table of predictions
+cbind(energy.future$pred,L,U)
+
+
+```
+
+
+
+
+
+
+
+
+
