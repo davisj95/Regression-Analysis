@@ -1,0 +1,59 @@
+Class Preparation
+```{r}
+setwd("~/STAT 330 - Intro to Regression/Class Exercises")
+fram<-read.csv("frmgham2.csv",header=TRUE)
+
+# subset to participants that didn't have CHD
+fram<-subset(fram,PERIOD==1 & PREVCHD==0)
+
+# subset to risk factors under study
+fram<-fram[,c(2:14,30)]
+
+fram <- na.omit(fram)
+str(fram)
+fram$SEX <- as.factor(fram$SEX)
+fram$SEX <- relevel(fram$SEX, ref=1)
+fram$CURSMOKE <- as.factor(fram$CURSMOKE)
+fram$DIABETES <- as.factor(fram$DIABETES)
+fram$BPMEDS <- as.factor(fram$BPMEDS)
+fram$CVD <- as.factor(fram$CVD)
+
+train.row <- sample(1:3658, 3000, replace=FALSE)
+fram.train <- fram[train.row,]
+fram.test <- fram[-train.row,]
+
+```
+
+
+```{r}
+#forward
+min.model <- glm(CVD~+1, data=fram.train, family="binomial")
+max.model <- formula(glm(CVD~., data=fram.train, family="binomial"))
+out1.cvd <- step(min.model, direction="forward", scope=max.model)
+out2.cvd <- step(glm(CVD~., data=fram.train, family="binomial"))
+out3.cvd <- step(min.model, direction="both", scope=max.model)
+
+library(ROCR)
+train.pred <- prediction(predict(out3.cvd, type="response"), fram.train$CVD)
+train.perf<-performance(train.pred, measure="tpr", x.measure="fpr")
+plot(train.perf)
+abline(0,1)
+
+#test.data
+test.pred <- prediction(predict(out3.cvd, newdata=fram.test, type="response"), fram.test$CVD)
+test.perf<-performance(test.pred, measure="tpr", x.measure="fpr")
+plot(test.perf, add=TRUE, col="royalblue")
+plot(train.perf, col="blue")
+
+```
+
+
+
+
+
+
+
+
+
+
+
