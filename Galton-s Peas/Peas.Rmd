@@ -1,0 +1,126 @@
+
+
+
+
+```{r}
+peas <- read.table(text="
+parent,offspring
+0.21,0.1726
+0.20,0.1707
+0.19,0.1637
+0.18,0.1640
+0.17,0.1613
+0.16,0.1617
+0.15,0.1598", header=TRUE, sep=",")
+
+pea <- read.table(text="parent,offspring
+0.21,0.1726
+0.20,0.1707
+0.19,0.1637", header=TRUE, sep=",")
+
+out.mod <- lm(offspring~parent, data=pea)
+summary(out.mod)
+
+
+
+cor(peas$parent, peas$offspring)
+plot(offspring~parent, data=peas)
+```
+In-Class Work 1/31/2018
+
+Objective: Scientific Evidence
+Model: yi = B0 + B1xi + Ei, Ei~N(0,O^2)
+Analysis:
+     Estimate B0, B1, O^2 and measure of uncertainty (Standard Error of B0 and B1)
+     Interpret what the scientific effect is
+     Inference/Test
+     Graphic
+     
+```{r}
+#model: offspring = beta0 + beta1 parent+ epsilon, epsilon~N(0,sigma2)
+
+#Fit Model/Estimate the Model Parameters
+out.peas<-lm(offspring~parent, data=peas)
+
+#See parameter estimates and standard errors
+summary(out.peas)        #Beta0hat is intercept and beta1 is parent
+beta1hat <- 0.21         #estimated slope of inheritance effect is 0.21
+beta0hat <- 0.127029
+sigma2 <- 0.002043^2
+
+#There is a statistically significant inheritance effect (p-value=0.002852)
+```
+
+
+Test H0: B1=0
+t-test
+ANOVA
+
+Both are the same, but sometimes one is easier to do than the other. we will learn more about it later
+Create a 95% CI on B1
+```{r}
+#pvalue for h0: B1 is above
+#95% CI on B1 is (0.1107, 0.3093)
+confint(out.peas)
+```
+#Conclusion
+There is a statistically significant inheritance effect in sweet pea diameters (pavlue=0.002852).
+For a one unit increase in parent sweet pea diameter, we expect an increase of 0.21 (95% CI: 0.1107, 0.3093) in offspring sweet pea diameter.
+
+```{r}
+#Create a graphic showing estimated line and uncertainty
+library(ggplot2)
+qplot(parent, offspring, data=peas,
+      geom="smooth", formula=y~x, method="lm", se=TRUE,
+      xlab="Diameter of Parent Pea",
+      ylab="Diameter of Offspring Pea")
+```
+95% CI of mean of all offspring diameter with Parent = 0.2
+```{r}
+predict(out.peas, newdata=data.frame(parent=0.2), interval="confidence")
+```
+
+If we are interested in prediciton...
+95% Prediction interval(PI) of a new offspring diameter with parent = 0.18
+```{r}
+predict(out.peas, newdata=data.frame(parent=0.18), interval="prediction")
+```
+
+Graphic to demonstrate prediction performance
+```{r}
+plot.df <- cbind(peas, predict(out.peas, interval="prediction"))
+ggplot(plot.df, aes(parent, offspring)) + xlab("Diameter of Parent Pea") + geom_point() + 
+  geom_line(aes(y=fit), color="royalblue") + geom_line(aes(y=lwr), color="red", linetype="dashed") +
+  geom_line(aes(y=upr), color="red", linetype="dashed")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
