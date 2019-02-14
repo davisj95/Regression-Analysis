@@ -1,2 +1,3 @@
 # Regression-Analysis
-School Projects
+
+This compilation of projects displays some different approaches to Regression Analysis
