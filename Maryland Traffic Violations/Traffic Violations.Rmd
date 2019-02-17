@@ -2,7 +2,8 @@
 
 Read in Data
 ```{r}
-stops.full<-read.csv("Violations.csv", header=TRUE, as.is=TRUE)
+stops.full<-read.csv("http://data.montgomerycountymd.gov/api/views/4mse-ku6q/rows.csv?accessType=DOWNLOAD",
+                     header=TRUE,as.is=TRUE)
 
 # subset to last year
 last.year<-2017
