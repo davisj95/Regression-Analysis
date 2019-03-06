@@ -62,10 +62,12 @@ subset(leverage.hills, hills$Race=="BenNevis")
 
 #Cook's Distance
 cd.hills <- cooks.distance(out.hills)
+hills$"Cook's Distance" <- cd.hills
 subset(cd.hills, hills$Race=="MoffatChase")
 
 #R-Studentized residuals
 R.hills <- rstudent(out.hills)
+hills$"R-Studentized Resids" <- R.hills
 subset(R.hills, hills$Race=="CairnTable")
 
 #Validate the noramlity assumption
