@@ -1,0 +1,70 @@
+Poisson Regression HW
+Jacob Davis
+
+Read in Data
+```{r}
+ring <- read.table(header=TRUE, text="BadRings Temp
+0 66
+1 70
+0 69
+0 68
+0 67
+0 72
+0 73
+0 70
+1 57
+1 63
+1 70
+0 78
+0 67
+3 53
+0 67
+0 75
+0 70
+0 81
+0 76
+0 79
+2 75
+0 76
+1 58")
+```
+
+
+1. Fit an appropriate model that predicts the number of O-ring failures given the temperature. State the model. Report the estimated regression coefficients and standard errors.
+```{r}
+#Model
+#Y(Bad Ring)~Poisson(exp(beta0+beta1 Temp))
+out.ring <- glm(BadRings~Temp, data=ring, family="poisson")
+summary(out.ring)
+```
+
+
+2. Write an interpretation of the effect of temperature on O-ring failures (Describe to a non-statistician, report 95% CI)
+```{r}
+exp(confint(out.ring)[-1,])
+exp(-0.12153)
+#We estimate that for every 1 degree decrease in temperature, the odds of an O-ring failing increase 0.89 times(CI: 0.81, 0.96)
+```
+
+
+3. Test H0: temperature has no effect on O-ring failures at alpha=0.05. Report the test statistic and p-value. Write the conclusion in a brief quote for a non-statistician.
+```{r}
+out1.ring <- glm(BadRings~+1, data=ring, family="poisson")
+anova(out1.ring, out.ring, test="Chisq")
+
+#Our original hypothesis was that temperature doesn't have an effect on whether an O-ring fails or not, and we analyzed whether that claim was true or not. We built two models and compared them, the first, not including temperature, and the second, including temperature. Upon comparison, we see that there is a very significant affect that temperature has on o-ring failure (p-value: 0.003), meaning scientists need to focus their efforts on creating more durable o-rings to withstand a wider range of temperatures to avoid any potential accidents.
+```
+
+
+4. The temperature of the 25th launch was 31 degrees. Compute the 95% CI for the mean number of O-ring failures that day.
+```{r}
+ring.logit <- predict(out.ring, newdata= data.frame(Temp=31), type="link", se.fit=TRUE)
+logit.ci <- ring.logit$fit + c(-1,1)*1.96*ring.logit$se.fit 
+
+
+```
+
+
+
+
+

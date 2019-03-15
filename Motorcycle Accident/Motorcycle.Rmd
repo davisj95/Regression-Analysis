@@ -1,0 +1,77 @@
+Silverman's Motorcycle Data
+accel = head acceleration(g)
+times = time after impact(milliseconds)
+
+```{r}
+library(MASS)
+head(mcycle)
+
+#plot data (notice the nonlinear effect)
+plot(accel~times, data=mcycle)
+
+#polynomial approximation
+out1 <- lm(accel~ times + I(times^2) + I(times^3) + I(times^4) + I(times^5), data=mcycle, x=TRUE)
+head(out1$x)
+
+#judge the fit from the plot
+x.star<-seq(0,60,length=100)
+yhat1 <- predict(out1,newdata=data.frame(times=x.star))
+lines(x.star,yhat1,col="red")
+
+#median absolute prediction error
+median(abs(predict(out1)))
+
+
+#VIF
+library(car)
+vif(out1)
+
+#collinearity plots
+plot(~ times + I(times^2) + I(times^3) + I(times^4) + I(times^5), data=mcycle)
+
+
+#instead of computing the basis function expansion ourselves, use one that is orthonormal
+out2 <- lm(accel~poly(times,5),data=mcycle,x=TRUE)
+head(out2$x)
+plot(~out2$x[,2]+out2$x[,3]+out2$x[,4]+out2$x[,5]+out2$x[,6])
+
+#evaluate fit
+plot(accel~times, data=mcycle)
+x.star<-seq(0,60,length=100)
+yhat2 <- predict(out2,newdata=data.frame(times=x.star))
+lines(x.star,yhat2,col="red")
+
+
+median(abs(predict(out2)))
+
+
+#My Turn---------------------------
+
+out3 <- lm(accel~poly(times,15),data=mcycle,x=TRUE)
+#head(out3$x)
+#plot(~out3$x[,2]+out3$x[,3]+out3$x[,4]+out3$x[,5]+out3$x[,6])
+
+#evaluate fit
+plot(accel~times, data=mcycle)
+x.star<-seq(0,60,length=100)
+yhat3 <- predict(out3,newdata=data.frame(times=x.star))
+lines(x.star,yhat3,col="red")
+
+
+median(abs(predict(out2)))
+
+#install.packages("splines")
+#fit cubic splines
+
+library(splines)
+out4 <- lm(accel~ns(times,9), data=mcycle,x=TRUE)
+
+plot(accel~times, data=mcycle)
+x.star<-seq(0,60,length=100)
+yhat4 <- predict(out4,newdata=data.frame(times=x.star))
+lines(x.star,yhat4,col="red")
+
+
+
+```
+

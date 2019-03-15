@@ -1,0 +1,127 @@
+Class Preparation - AL East 
+```{r}
+#url <- "http://www.espn.com/mlb/standings/_/seaso#n/2017"
+#p <- htmlParse(url)
+#baseball <- readHTMLTable(url, header=FALSE, #which=1, skip.rows=c(1:21,27,33),
+
+baseball <- read.table(text="108,229,'East'
+100,182,'East'
+90,70,'East'
+73,-123,'East'
+47,-270,'East'
+91,170,'Central'
+78,-37,'Central'
+64,-166,'Central'
+62,-192,'Central'
+58,-195,'Central'
+103,263,'West'
+97,139,'West'
+89,-34,'West'
+80,-1,'West'
+67,-111,'West'", header=FALSE, sep=",")  
+
+names(baseball) <- c("wins","run.diff","division")
+str(baseball)
+
+```
+
+
+EDA
+```{r}
+#summary statistics by division
+by(baseball$wins, baseball$division,mean)
+by(baseball$run.diff, baseball$division, mean)
+by(baseball$wins, baseball$division,sd)
+by(baseball$run.diff, baseball$division, sd)
+
+#scatterplot
+plot(wins~run.diff, data=baseball, type="n")
+points(wins~run.diff, data=subset(baseball, division=="East"),pch=19,col="orange")
+points(wins~run.diff, data=subset(baseball, division=="Central"),pch=19,col="black")
+points(wins~run.diff, data=subset(baseball, division=="West"),pch=19,col="red")
+```
+
+
+Class Participation
+```{r}
+
+#Model: wins~divison+run.diff (in R)
+baseball$division<-factor(baseball$division)
+out1.baseball <- lm(wins~division+run.diff, data=baseball, x=TRUE, y=TRUE)
+
+out1.baseball$x
+#divisionCentral is unnecessary since "Central" is divisionEast=0 and divisionWest=0
+#in R, it takes out the first factor in alphabetical order
+#Which level should be omitted?
+  #Consequences:
+  #beta0= y-intercept = mean of y when all other x's are zero
+      #Rundiff=0
+      #div.east = 0
+      #div.west = 0
+      #really the central division
+
+#So beta0 is the y intercept for Central division
+#Since we are making all comparisons to the ALEast, then specify EAST as the level that is omitted
+
+#to specify that East is the level we want to compare against
+baseball$division <- relevel(baseball$division, "East")
+out2.baseball <- lm(wins~division+run.diff, data=baseball, x=TRUE, y=TRUE)
+
+#Regression Coefficient Interpretation:
+  #Since division has 3 levels, there are actually 3 models:
+    #If division = "East":    beta0 +beta1(Central=0)+beta2(West=0)+beta3(run.diff)  so model: beta0+beta3(run.diff)
+    #If division = "Central": beta0 +beta1(Central=1)+beta2(West=0)+beta3(run.diff)  so model: beta0+beta1+beta3(run.diff)
+                                                                                    #real y intercept = beta0+beta1
+    #If division = "West":    beta0 +beta1(Central=0)+beta2(West=1)+beta3(run.diff)  so model: beta0+beta2+beta3(run.diff)
+
+  #Beta0 = yintercept for East
+  #Beta1 = difference between Central and East for all run.diff
+  #Beta2 = difference between West and East for all run.diff
+  #Beta3 = partial slope of run.diff
+
+#Is the AL East the hardest division
+# H0: beta1 = 0 (compare to Central)
+#     beta2 = 0 (compare to West)
+
+
+summary(out2.baseball)
+
+#if East, beta0+beta3run.diff -> 81.1+0.08run.diff
+#if Cent, beta0+beta1+beta3run.diff -> (81.1-0.17) + 0.08run.diff
+#if West, beta0+beta2+beta3run.diff -> (81.1+0.14) + 0.08run.diff
+
+
+#To show the 3 models that are estimated (one for each factor level)
+#Scatterplot(I took the pic)
+
+#AL East
+plot(wins~run.diff, data=baseball, type="n")
+points(wins~run.diff, data=subset(baseball, division=="East"),pch=19,col="blue")
+abline(81.096918, 0.082029, col="blue")
+#AL Central
+points(wins~run.diff, data=subset(baseball, division=="Central"),pch=19,col="black")
+abline(81.096918-0.168041, 0.082029, col="black")
+#AL West
+points(wins~run.diff, data=subset(baseball, division=="West"),pch=19,col="red")
+abline(81.096918+0.138265, 0.082029, col="red")
+
+
+
+
+
+```
+
+
+Class Participation 2
+```{r}
+#H0: no difference in mean wins between divisions
+#Test H0: no division effect
+reduced.baseball2 <- lm(wins~run.diff, data=baseball)
+anova(reduced.baseball2, out2.baseball)
+```
+
+
+
+
+
+
