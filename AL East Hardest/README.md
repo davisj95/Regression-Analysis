@@ -42,7 +42,9 @@ points(wins~run.diff, data=subset(baseball, division=="West"),pch=19,col="red")
 
 The following statistics and graph are produced:
 
+![1](https://user-images.githubusercontent.com/45023513/54469559-19185100-475f-11e9-99d8-220f27d79b85.png)
 
+![2](https://user-images.githubusercontent.com/45023513/54469560-19185100-475f-11e9-8ca2-135449f2d1d1.png)
 
 We can see in the summary statistics that the mean wins by division doesn’t particularly stand out and that in the graph there is a general trend to the data where East and West are extremely similar, and Central is slightly below the two.
 Through this quick process of finding summary statistics and plotting the points, we can’t see much proof to back up the statement that the AL East is the hardest, but there is more to do
@@ -60,8 +62,16 @@ out1.baseball <- lm(wins~division+run.diff, data=baseball, x=TRUE, y=TRUE)
 
 These are the reported parameter estimates and standard error from the model.
 
+![3](https://user-images.githubusercontent.com/45023513/54469561-19185100-475f-11e9-8845-3174357fa3d3.png)
+
 One observation to make is that the p-value for run differential is less than 0.0001, whereas the p-values for central and west aren’t significant. Another observation to make is even though there are three divisions we used in the model, division east is set to be the base, so the parameter estimate for division east is the parameter estimate for the intercept, and the estimates for divisions central and west are the differences from division east. To eliminate some of the ambiguity of the parameter estimates of each particular division, we can have a table like the following:
+
+![4](https://user-images.githubusercontent.com/45023513/54469562-19185100-475f-11e9-84bf-8137809eedd9.png)
+
 This lack of division east is also evident in the X matrix used to calculate these estimates
+
+![5](https://user-images.githubusercontent.com/45023513/54469554-187fba80-475f-11e9-9375-d66f595b0800.png)
+
 Because of this, it makes interpreting the data complicated.
 
 ## Model Reduction
@@ -79,15 +89,13 @@ Since division has three levels, there are actually three models to estimate the
   
 * If division is “Central”, the model is:&nbsp; 𝑦 = 𝛽<sub>0</sub> + 𝛽<sub>1</sub> * (Central=1) + 𝛽<sub>2</sub> * (West=0) + 𝛽<sub>3</sub> * (run.diff)
   
-The reason for this is with the elimination of the division variable, we need to account only for the y-intercept (which uses the East division as a base) and the difference in run differential from the y-intercept. Thus the 𝛽𝛽̂I are represented as such:
-𝛽𝛽̂0 =
-y-intercept for East division
-𝛽𝛽̂1 =
-difference between Central and East for run differential
-𝛽𝛽̂2 =
-difference between West and East for run differential
-𝛽𝛽̂3 =
-partial slope of run differential
+The reason for this is with the elimination of the division variable, we need to account only for the y-intercept (which uses the East division as a base) and the difference in run differential from the y-intercept. Thus the 𝛽<sub>i</sub> are represented as such:
+
+* 𝛽<sub>0</sub> = y-intercept for East division
+* 𝛽<sub>1</sub> = difference between Central and East for run differential
+* 𝛽<sub>2</sub> = difference between West and East for run differential
+* 𝛽<sub>3</sub> = partial slope of run differential
+
 To show the performance of these reduced models and compare them, we plotted them onto one chart. I decided to do this in R, and ran the following block of code:
 
 ```
@@ -104,13 +112,13 @@ abline(81.096918+0.138265, 0.082029, col="red")
 ```
 And this graph was produced:
 
-
+![6](https://user-images.githubusercontent.com/45023513/54469555-187fba80-475f-11e9-8e9a-ea4e1742b3ea.png)
 
 The blue points and line represent the East division, black represents the Central division, and red represents the West. As you can see, the regression lines are basically one on top of the other,
 meaning that visually there is no difference in the way the models perform. No matter which division you are in, you could estimate a team’s performance based on any of the models and they will be extremely similar results
 Even when the results are zoomed in as such, a difference is barely noticeable.
 
-
+![7](https://user-images.githubusercontent.com/45023513/54469556-187fba80-475f-11e9-915c-0522cf892693.png)
 
 Finally, to test the significance using ANOVA, we can run this block of code in R:
 ```
@@ -121,13 +129,13 @@ anova(reduced.baseball2, out2.baseball)
 ```
 and we get
 
-
+![8](https://user-images.githubusercontent.com/45023513/54469557-187fba80-475f-11e9-8634-4b13ef097694.png)
 
 Since p>0.05, we can reject this Oriole fan’s hypothesis and conclude that division doesn’t have a significant effect of whether the team will win or not.
 
 ## Final Notes
 While much of the chunks of code were performed in R, the above code for making the model in SAS gives us so much of this information for free. One of the tables that SAS gives for free is the Type III SS:
 
-
+![9](https://user-images.githubusercontent.com/45023513/54469558-19185100-475f-11e9-8739-21ddf3156e5a.png)
 
 which shows us anyway that run differential is extremely significant, while division is not. The value 0.6172 for the division p-value matches the p-value in the above table ran in R.
