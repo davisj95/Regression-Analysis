@@ -1,23 +1,21 @@
-Class Preparation
+EDA
 ```{r}
-setwd("~/STAT 330 - Intro to Regression/Class Exercises")
 exam <- read.csv("ExamPData.csv", header=TRUE)
-str(exam)
 
-table(exam$GPA>3.5, exam$ExamP)
+table(exam$GPA>=3.5, exam$ExamP)
 prop.table(table(exam$GPA>=3.5, exam$ExamP),margin=1)
 boxplot(GPA~ExamP, data=exam)
 
 ```
 
 
-Class Work
+Analysis
 ```{r}
 #define the response variable clearly
 exam$pass <- ifelse(exam$ExamP=="Passed",1,0)
 
 #model
-#log(P(pass|GPA)/P(nopass|GPA))=meta0+beta1GPA
+#log(P(pass|GPA)/P(nopass|GPA))=beta0+beta1GPA
 out.exam <- glm(pass~GPA, data=exam, family="binomial")
 summary(out.exam)
 
@@ -56,8 +54,15 @@ phat.u <- 1/(1+exp(-logit.u))
 lines(xstar,phat.l, lty=2,col="gray")
 lines(xstar,phat.u, lty=2,col="gray")
 
+# ROC Curve
+library(ROCR)
+ROCRpred <- prediction(predict(out.exam, type='response'), exam$pass)
+ROCRperf <- performance(ROCRpred, measure='tpr',x.measure='fpr')
+plot(ROCRperf)
+abline(0,1)
 
-
+#AUC
+performance(ROCRpred, measure="auc")
 ```
 
 
