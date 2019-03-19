@@ -1,9 +1,3 @@
----
-Jacob Davis
-1/16/2018
-STAT 330 - Homework 1
----
-
 1. ARIMA time series models make assumptions about the possible trend, stationarity, and distribution of the data. For each of the following national parks:
 
  - Download the Annual Park Recreation Visitation data and write documented reproducible code to create an    appropriate R dataframe.
@@ -16,8 +10,6 @@ STAT 330 - Homework 1
   (d) Acadia
   
 ```{r}
-setwd("~/Winter 2018/STAT 330 - Intro to Regression/Homework/Homework 1")
-
 #Washington Monument Analysis
 
 wash <- read.csv("Washington Monument Visitors.csv", header=TRUE, sep=",")  #Reads in data to df
@@ -27,36 +19,29 @@ plot(RecreationVisitors~ï..Year, data=wash, type="b", ylab="Washington Monument
 
 #Jefferson Memorial Analysis
 
-jeff <- read.csv("Jefferson Memorial Visitors.csv", header=TRUE, sep=",")  #Reads in data to df
-jeff$RecreationVisitors <- as.numeric(gsub(',','',jeff$RecreationVisitors)) #Takes out commas
-jeff$RecreationVisitors <- jeff$RecreationVisitors/10^6                     #Changes visitors to millions
+jeff <- read.csv("Jefferson Memorial Visitors.csv", header=TRUE, sep=",")  
+jeff$RecreationVisitors <- as.numeric(gsub(',','',jeff$RecreationVisitors)) 
+jeff$RecreationVisitors <- jeff$RecreationVisitors/10^6                     
 plot(RecreationVisitors~ï..Year, data=jeff, type="b", ylab="Jefferson Memorial NP Annual Visitors (in millions)")
 
 #Wright Bros Analysis
 
-bros <- read.csv("Wright Bros Memorial.csv", header=TRUE, sep=",")  #Reads in data to df
-bros$RecreationVisitors <- as.numeric(gsub(',','',bros$RecreationVisitors)) #Takes out commas
-bros$RecreationVisitors <- bros$RecreationVisitors/10^6                     #Changes visitors to millions
+bros <- read.csv("Wright Bros Memorial.csv", header=TRUE, sep=",")  
+bros$RecreationVisitors <- as.numeric(gsub(',','',bros$RecreationVisitors)) 
+bros$RecreationVisitors <- bros$RecreationVisitors/10^6                     
 plot(RecreationVisitors~ï..Year, data=bros, type="b", ylab="Wright Bros Memorial NP Annual Visitors (in millions)")
 
 #Acadia Analysis
 
-aca <- read.csv("Acadia.csv", header=TRUE, sep=",")  #Reads in data to df
-aca$RecreationVisitors <- as.numeric(gsub(',','',aca$RecreationVisitors)) #Takes out commas
-aca$RecreationVisitors <- aca$RecreationVisitors/10^6                     #Changes visitors to millions
+aca <- read.csv("Acadia.csv", header=TRUE, sep=",")  
+aca$RecreationVisitors <- as.numeric(gsub(',','',aca$RecreationVisitors))
+aca$RecreationVisitors <- aca$RecreationVisitors/10^6                 
 
 plot(RecreationVisitors~ï..Year, data=aca, type="b", ylab="Acadia NP Annual Visitors (in millions)")
 
 ```
   
   
-Choose a national park that you have some interest in
-A. Where is it?
-   THE LINCOLN MEMORIAL - WASHINGTON DC
-
-B. Write a paragraph about the creation of the national park.
-      The Lincoln Memorial was built to remember our 16th President of the United States. There was a great public demand for the country to build a memorial remembering the great man that Pres. Lincoln was, but it wasn't until the early 20th century where bills were proposed and enacted for the construction of such a memorial to begin. There were also many who questioned the proposed location of the memorial, stating that the Potomac Park, where the memorial currently sits, was unfit at the time for construction.The Memorial was finally dedicated on May 30, 1922, and was later listed on the National Register of Historic Places in 1966
-      
 C. Download the Annual Park Recreation Visitation data and write documented reproducible code to create an appropriate R dataframe
 ```{r}
 linc <- read.csv("Lincoln.csv", header=TRUE, sep=",")  #Reads in data to df
@@ -70,7 +55,7 @@ plot(RecreationVisitors~ï..Year, data=linc, type="b", ylab="Lincoln Memorial NP
 #Insert comments on analysis
 ```
 
-E. If you feel flitering to the 'recent past' or a transformation is necessary, explain what you observed and demonstrate why it is better after filtering and/or transforming
+E. If you feel filtering to the 'recent past' or a transformation is necessary, explain what you observed and demonstrate why it is better after filtering and/or transforming
 ```{r}
 linc2000 <- subset(linc, ï..Year > 1999)
 plot(RecreationVisitors~ï..Year, data=linc2000)
@@ -93,15 +78,3 @@ linc2000.ci <- linc2000.future$pred + c(-1,1)*qnorm(0.975) * linc2000.future$se
 
 ```
 
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
