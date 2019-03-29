@@ -2,8 +2,9 @@
 
 Read in Data
 ```{r}
-stops.full<-read.csv("http://data.montgomerycountymd.gov/api/views/4mse-ku6q/rows.csv?accessType=DOWNLOAD",
-                     header=TRUE,as.is=TRUE)
+#stops.full<-read.csv("http://data.montgomerycountymd.gov/api/views/4mse-ku6q/rows.csv?accessType=DOWNLOAD",header=TRUE,as.is=TRUE)
+
+#stops.full<-read.csv("Violations.csv", header=TRUE, as.is = TRUE, sep=",")
 
 # subset to last year
 last.year<-2017
@@ -103,12 +104,13 @@ summary(speed.test$speed)
 
 Create RF
 ```{r}
-#install.packages("randomForest")
+install.packages("randomForest")
 library(randomForest)
 out.speed <- randomForest(x=speed.train[,-18], y=speed.train$speed,
                           xtest=speed.train[,-18], ytest=speed.test$speed, 
-                          replace=TRUE, keep.forest=TRUE, ntree=50, mtry=5,
+                          replace=TRUE, keep.forest=TRUE, ntree=25, mtry=5,
                           nodesize=30)
+out.speed
 ```
 
 Compare train prediction error and test prediction error
