@@ -6,7 +6,6 @@ output: html_document
 
 US residential energy consumption
 ```{r}
-setwd("~/STAT 330 - Intro to Regression/Class Exercises")
 my.data <- read.csv("Energy Numbers.csv", header=TRUE, sep=",")
 ```
 
