@@ -59,7 +59,7 @@ E. If you feel filtering to the 'recent past' or a transformation is necessary, 
 ```{r}
 linc2000 <- subset(linc, ï..Year > 1999)
 plot(RecreationVisitors~ï..Year, data=linc2000)
-# It doesn't really make sense to transform our data because our model isn't really showing a mulitpolicative curve. What I decided to do was filter to the years 2000 until now because before the year 2000 are such volatile numbers due to different events happening in DC during the time. For example, there's a spike in the 60's due to Civil Right's movements, but there was an uncharacteristic dip where for most of the 90's there were few visitors. I couldn't find a whole lot of information on it, but I learned that the monument was closed for a period of time in the 90's for renovation, and they closed off parts of the monument to public access. I felt that it would affect my prediction negatively, so I filtered from the year 2000 on.
+# It doesn't really make sense to transform our data because our model isn't really showing a multiplicative curve. What I decided to do was filter to the years 2000 until now because before the year 2000 are such volatile numbers due to different events happening in DC during the time. For example, there's a spike in the 60's due to Civil Right's movements, but there was an uncharacteristic dip where for most of the 90's there were few visitors. I couldn't find a whole lot of information on it, but I learned that the monument was closed for a period of time in the 90's for renovation, and they closed off parts of the monument to public access. I felt that it would affect my prediction negatively, so I filtered from the year 2000 on.
 ```
 
 F. Fit an ARIMA(1,1,1) model and report the parameter estimates and standard errors
