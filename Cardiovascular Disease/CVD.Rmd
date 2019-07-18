@@ -45,6 +45,9 @@ test.perf<-performance(test.pred, measure="tpr", x.measure="fpr")
 plot(test.perf, add=TRUE, col="royalblue")
 plot(train.perf, col="blue")
 
+#auc
+performance(test.pred, measure="auc")
+
 ```
 
 
